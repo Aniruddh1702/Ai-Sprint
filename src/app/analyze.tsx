@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -53,7 +54,7 @@ export default function AnalyzeScreen() {
     try {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        alert('Permission to access photos is needed to analyze listing screenshots.');
+        Alert.alert('Permission Needed', 'Permission to access photos is needed to analyze listing screenshots.');
         return;
       }
 
@@ -78,19 +79,19 @@ export default function AnalyzeScreen() {
 
     if (inputMode === 'manual') {
       if (!manualTitle || !manualRent) {
-        alert('Please enter at least PG name and monthly rent.');
+        Alert.alert('Missing Details', 'Please enter at least PG name and monthly rent.');
         return;
       }
       payloadText = `${manualTitle}. Rent ₹${manualRent} per month. Deposit ₹${manualDeposit || '0'}. Food included: ${manualFood}. Electricity: ${manualElectricity}.`;
     }
 
     if (inputMode === 'image' && !selectedImage) {
-      alert('Please choose or take a screenshot of the PG ad first.');
+      Alert.alert('No Image Selected', 'Please choose or take a screenshot of the PG ad first.');
       return;
     }
 
     if (inputMode === 'text' && !adText.trim()) {
-      alert('Please paste the advertisement text or select a sample snippet below.');
+      Alert.alert('Empty Listing', 'Please paste the advertisement text or select a sample snippet below.');
       return;
     }
 

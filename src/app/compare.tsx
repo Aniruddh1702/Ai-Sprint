@@ -22,6 +22,7 @@ export default function CompareScreen() {
     listings,
     selectedForCompare,
     toggleCompareSelection,
+    clearCompareSelection,
     profile,
     getComparisonInsights,
     setActiveListing,
@@ -97,8 +98,7 @@ export default function CompareScreen() {
         </View>
         <Pressable
           onPress={() => {
-            // Clear selections
-            selectedForCompare.forEach((id) => toggleCompareSelection(id));
+            clearCompareSelection();
           }}
           style={styles.resetBtn}
         >

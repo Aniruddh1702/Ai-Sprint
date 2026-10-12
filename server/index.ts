@@ -292,7 +292,13 @@ The JSON must follow this exact schema:
         });
 
         const rawText = response.text || '';
-        const parsed = JSON.parse(rawText.replace(/```json/g, '').replace(/```/g, '').trim());
+        let cleanedJson = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        const firstBrace = cleanedJson.indexOf('{');
+        const lastBrace = cleanedJson.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1) {
+          cleanedJson = cleanedJson.substring(firstBrace, lastBrace + 1);
+        }
+        const parsed = JSON.parse(cleanedJson);
 
         return res.json({
           success: true,
@@ -382,10 +388,30 @@ Student Monthly Budget: ₹${context.budget || 15000}
 Active Food Plan: ${JSON.stringify(context.activeFoodPlan || 'None')}
 Active Transport: ${JSON.stringify(context.activeTransportMode || 'None')}`;
 
-        const formattedContents = messages.map((m: any) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
-        }));
+        // Ensure first message starts with 'user' and roles alternate strictly for Gemini API
+        const rawHistory = Array.isArray(messages) ? messages : [];
+        const firstUserIdx = rawHistory.findIndex((m: any) => m.role === 'user');
+        const validHistory = firstUserIdx >= 0 ? rawHistory.slice(firstUserIdx) : [{ role: 'user', content: userMessage || 'Hello' }];
+
+        const formattedContents: any[] = [];
+        for (const m of validHistory) {
+          const role = m.role === 'assistant' ? 'model' : 'user';
+          const text = (m.content || '').trim();
+          if (!text) continue;
+
+          if (formattedContents.length > 0 && formattedContents[formattedContents.length - 1].role === role) {
+            formattedContents[formattedContents.length - 1].parts[0].text += `\n${text}`;
+          } else {
+            formattedContents.push({
+              role,
+              parts: [{ text }],
+            });
+          }
+        }
+
+        if (formattedContents.length === 0) {
+          formattedContents.push({ role: 'user', parts: [{ text: userMessage || 'Hello' }] });
+        }
 
         const response = await aiClient.models.generateContent({
           model: 'gemini-2.5-flash',

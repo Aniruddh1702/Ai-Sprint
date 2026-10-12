@@ -40,6 +40,7 @@ interface AppContextType {
   // Comparison
   selectedForCompare: string[];
   toggleCompareSelection: (id: string) => void;
+  clearCompareSelection: () => void;
   getComparisonInsights: () => ComparisonInsight;
 
   // Real AI Analysis
@@ -346,6 +347,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
+  const clearCompareSelection = () => {
+    setSelectedForCompare([]);
+  };
+
   const getComparisonInsights = (): ComparisonInsight => {
     const list = listings.filter((l) => selectedForCompare.includes(l.id));
     return compareListings(list.length > 0 ? list : listings.slice(0, 2), profile);
@@ -560,6 +565,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteListing,
         selectedForCompare,
         toggleCompareSelection,
+        clearCompareSelection,
         getComparisonInsights,
         isAnalyzing,
         analysisError,

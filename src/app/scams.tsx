@@ -7,6 +7,7 @@ import {
   Pressable,
   Linking,
   Modal,
+  Alert,
 } from 'react-native';
 import { useApp } from '@/context/AppContext';
 import { ClayColors, ClayRadii, ClayShadows } from '@/constants/clayTheme';
@@ -90,7 +91,7 @@ export default function ScamAlertsScreen() {
 
   const handleSubmitUserReport = () => {
     if (!reportTitle.trim() || !reportWhatHappens.trim()) {
-      alert('Please enter a title and description of the incident.');
+      Alert.alert('Missing Fields', 'Please enter a title and description of the incident.');
       return;
     }
 

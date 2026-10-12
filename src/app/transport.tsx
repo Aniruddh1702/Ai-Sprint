@@ -67,12 +67,14 @@ export default function TransportGuideScreen() {
     }
   }, [profile.city]);
 
-  // Sync start location when activeListing changes
+  // Sync start location when activeListing or selectedCity changes
   useEffect(() => {
-    if (activeListing) {
+    if (activeListing && activeListing.city && activeListing.city.toLowerCase() === selectedCity.toLowerCase()) {
       setStartLocation(`${activeListing.title}, ${activeListing.address}`);
+    } else {
+      setStartLocation(`PG Accommodation in ${selectedCity}`);
     }
-  }, [activeListing]);
+  }, [activeListing, selectedCity]);
 
   // Sync destination if profile updates
   useEffect(() => {

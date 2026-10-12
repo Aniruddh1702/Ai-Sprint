@@ -100,6 +100,12 @@ const STORAGE_KEYS = {
 
 // In Expo Web / Android / iOS, determine backend URL
 const getBackendUrl = () => {
+  if (Platform.OS === 'web' && typeof window !== 'undefined') {
+    // In production on Render or other web hosts, use current origin
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return window.location.origin;
+    }
+  }
   if (Platform.OS === 'android') {
     return 'http://10.0.2.2:3001';
   }

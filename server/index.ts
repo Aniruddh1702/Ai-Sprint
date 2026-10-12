@@ -1,7 +1,13 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -432,6 +438,20 @@ Active Transport: ${JSON.stringify(context.activeTransportMode || 'None')}`;
     res.status(500).json({ error: 'Chat processing failed.' });
   }
 });
+
+// Serve exported Expo web build if dist directory exists (for Render and production hosts)
+const distPath = path.resolve(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  console.log(`📦 Serving static web bundle from ${distPath}`);
+  app.use(express.static(distPath));
+  app.get('*', (req: Request, res: Response) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    } else {
+      res.status(404).json({ error: 'Endpoint not found' });
+    }
+  });
+}
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 PG Proof AI Gateway running on http://localhost:${PORT}`);

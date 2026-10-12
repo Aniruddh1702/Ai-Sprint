@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: pg-proof-app
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm run serve
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: GEMINI_API_KEY
+        sync: false
+    healthCheckPath: /api/health

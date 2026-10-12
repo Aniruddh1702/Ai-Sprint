@@ -43,7 +43,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "tsx src/utils/__tests__/costCalculator.test.ts && tsx src/utils/__tests__/comparisonEngine.test.ts && tsx src/utils/__tests__/studentBudgetEngine.test.ts && tsx src/utils/__tests__/transportEngine.test.ts"
+    "test": "tsx src/utils/__tests__/costCalculator.test.ts && tsx src/utils/__tests__/comparisonEngine.test.ts && tsx src/utils/__tests__/studentBudgetEngine.test.ts && tsx src/utils/__tests__/transportEngine.test.ts",
+    "build:web": "expo export -p web",
+    "build:server": "cd server && npm install",
+    "build": "npm run build:web && npm run build:server",
+    "serve": "cd server && npm start"
   },
   "private": true
 }

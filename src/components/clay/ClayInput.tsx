@@ -58,13 +58,13 @@ export const ClayInput: React.FC<ClayInputProps> = ({
         />
 
         {iconRight && (
-          <Pressable
-            onPress={onRightIconPress}
-            disabled={!onRightIconPress}
-            style={styles.iconRight}
-          >
-            {iconRight}
-          </Pressable>
+          onRightIconPress ? (
+            <Pressable onPress={onRightIconPress} style={styles.iconRight}>
+              {iconRight}
+            </Pressable>
+          ) : (
+            <View style={styles.iconRight}>{iconRight}</View>
+          )
         )}
       </View>
 

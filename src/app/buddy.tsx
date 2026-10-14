@@ -200,6 +200,8 @@ export default function BuddyChatScreen() {
             value={inputVal}
             onChangeText={setInputVal}
             onSubmitEditing={handleSend}
+            onRightIconPress={handleSend}
+            returnKeyType="send"
             containerStyle={{ marginVertical: 0, flex: 1 }}
             inputStyle={{ minHeight: 44, paddingVertical: 8 }}
             iconRight={
